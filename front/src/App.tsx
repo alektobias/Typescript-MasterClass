@@ -1,5 +1,6 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import React, {useEffect, useState, useMemo, useCallback, useRef, useContext, useReducer, useImperativeHandle } from 'react';
 import Axios from 'axios';
+import Form, {FormRef} from './Form';
 
 
 
@@ -14,11 +15,21 @@ function App() {
   const names = useMemo(()=> user?.map(user => user.name).join(', '),[user])
   const greeting = useCallback( (name: string) => alert(`Helo ${name}`), []);
 
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const FormRef = useRef<FormRef>(null);
+
+  function focusOnInput(){
+    inputRef.current?.focus();
+  }
+
+  function handleSubmit() {
+    FormRef.current?.submit();
+  }
+
   useEffect(() => {loadData()},[])
   return (
-    <div>
-      {names}
-    </div>
+    <Form ref={FormRef}/>
   );
 }
 
