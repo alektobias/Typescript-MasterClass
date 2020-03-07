@@ -1,27 +1,28 @@
-import React, {useEffect, useState} from 'react';
-import api from './services/api';
-import User from './components/User'
+import React, {useEffect, useState, useMemo} from 'react';
+import Axios from 'axios';
 
-interface IUser {
-  name: string;
-  email: string
-}
 
 
 function App() {
-  const [users, setUsers]= useState<IUser[]>([]);
-  useEffect(() => {
-    api.get<IUser[]>('/users').then(response => {
-      setUsers(response.data)
-    })
-  }, [])
+  const [user, setUser] = useState<IUser>();
 
+  async function loadData() {
+    const response = await Axios.get<IUser>('https://api.github.com/users/alektobias')
+    setUser(response.data);
+  } 
 
+  useEffect(() => {loadData()},[])
   return (
-    <div className="App">
-     {users.map( user => <User key={user.email} user={user}/>)}
+    <div>
+      {user?.name}
     </div>
   );
 }
 
 export default App;
+
+interface IUser {
+  name: string;
+  login: string;
+  avatar_url: string;
+}
